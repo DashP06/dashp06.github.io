@@ -1,34 +1,36 @@
-import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
-import "./App.css";
+import React, { useState } from 'react';
+import Navbar from './components/layout/Navbar';
+import HomePage from './pages/HomePage';
+import ProjectPage from './components/projects/ProjectPage';
 
 function App() {
-  const [count, setCount] = useState(0);
+  const [currentView, setCurrentView] = useState('home');
+  const [selectedProject, setSelectedProject] = useState(null);
+
+  const handleNavigate = (view) => {
+    setCurrentView(view);
+    setSelectedProject(null);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleProjectClick = (projectId) => {
+    setSelectedProject(projectId);
+    setCurrentView('project');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleBack = () => {
+    setCurrentView('home');
+    setSelectedProject(null);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    <div className="bg-black min-h-screen text-white">
+      <Navbar onNavigate={handleNavigate} currentView={currentView} />
+      {currentView === 'home' && <HomePage onProjectClick={handleProjectClick} />}
+      {currentView === 'project' && <ProjectPage projectId={selectedProject} onBack={handleBack} />}
+    </div>
   );
 }
 
